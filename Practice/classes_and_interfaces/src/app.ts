@@ -1,124 +1,56 @@
-abstract class Department {
-  static fiscalYear = 2023;
-  //     name: string;
-  protected employees: string[] = [];
-
-  //id should be initialized onece ----
-  constructor(protected readonly id: string, public name: string) {
-    // this.name= n;
-  }
-  abstract describe(this: Department): void;
-
-  static createEmployee(name: string) {
-    return { name: name };
-  }
-
-  addEmployee(employee: string) {
-    this.employees.push(employee);
-  }
-  printEmployeeInformation() {
-    console.log(this.employees.length);
-    console.log(this.employees);
-  }
+// type AddFn = (a: number, b: number) => number;
+interface AddFn{
+    (a: number, b: number): number;
 }
 
-class ITDepartment extends Department {
-  constructor(id: string, public admins: string[]) {
-    super(id, "IT");
-    this.admins = admins;
-  }
+let add: AddFn;
 
-  describe() {
-    console.log("IT Department = id ", this.id);
-  }
+add= (n1: number,n2: number) => {
+    return n1 + n2;
 }
 
-class AccountingDepartment extends Department {
-  private lastReport: string;
-  private static instance: AccountingDepartment;
 
-
-  private constructor(id: string, private reports: string[]) {
-    super(id, "Accounting");
-    this.lastReport = reports[0];
-  }
-
-  static getInstance(){
-    if(AccountingDepartment.instance){
-      return this.instance;      
-    }
-    this.instance= new AccountingDepartment("acc/2",[]);
-    return this.instance;
-  }
-
-  describe() {
-    console.log("Accounting Department = id ", this.id);
-  }
-
-
-  get mostRecentReport() {
-    if (this.lastReport) {
-      return this.lastReport;
-    }
-    throw new Error("Reports not Found..");
-  }
-  set mostRecentReport(value: string) {
-    if (!value) {
-      throw new Error("Please Pass in a valid value!");
-    }
-    this.addReport(value);
-  }
-
-  addReport(text: string) {
-    this.reports.push(text);
-    this.lastReport = text;
-  }
-  addEmployee(name: string) {
-    if (name === "Sheharyar") {
-      return;
-    }
-    this.employees.push(name);
-  }
-
-  printReports() {
-    console.log(this.reports);
-  }
+interface Named{
+  readonly name?: string;
+  OutputName?: string; // ? for optional properties or functions
 }
 
-const employee = Department.createEmployee("Max");
-const year = Department.fiscalYear;
+interface Greetable extends Named{
+    greet(Phrase: string): void;
+}
 
-console.log(employee, year);
 
-// const info_Tech = new Department("IT", "Information Tech");
-// info_Tech.describe();
-const it = new ITDepartment("acc/1", ["Sheharyar"]);
-it.describe();
-it.addEmployee("Sheharyar");
-it.addEmployee("Maximillian");
-it.printEmployeeInformation();
+class Person implements Greetable{
+    name?: string;
+    age= 10;
+    
+   constructor(n? : string){
+    if(n){
+        this.name= n;
+    }
 
-console.log(it);
+   }
 
-// const accounting = new AccountingDepartment("acc/2", []);
-const accounting = AccountingDepartment.getInstance();
-const accounting2 = AccountingDepartment.getInstance();
+   greet(Phrase : string){
+    if(this.name){
+        console.log(Phrase + " " + this.name);
+    }
+    else{
+        console.log("Hi!");
+    }
+   }
+}
 
-console.log(accounting, accounting2);
 
-accounting.mostRecentReport = "You have to enlist all the procedures....";
-// accounting.addReport("Something Went Wrong...");
-accounting.printReports();
-accounting.addEmployee("Sheharyar");
-accounting.addEmployee("Manu");
-accounting.printEmployeeInformation();
-// accounting.addReport("Required Transactions are performed.")
-console.log(accounting.mostRecentReport);
-console.log(accounting);
-//we can access the properties of class outside of the class because bydefault , it is public.
+let user1:Greetable;
+user1= new Person();
+// user1={
+//     name: "MAX",
+//     age: 32,
+//     greet(Phrase: string){
+//         console.log(Phrase + " " + this.name);
+//     }
 
-// accounting.employees.push("Manu")
-
-// const accountingCopy={name : "Sheharyar",describe: accounting.describe};
-// accountingCopy.name;
-// accountingCopy.describe;
+// }
+user1.greet("Hi there - I am ");
+console.log(user1);
